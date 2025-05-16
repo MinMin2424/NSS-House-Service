@@ -63,6 +63,13 @@ public class PersonService {
         return person;
     }
 
+    public void setPersonHandlingEvent(Long personId) {
+        Person person = getPersonById(personId).orElseThrow(
+                () -> new PersonNotFoundException("Person with id " + personId + " not found")
+        );
+        person.setBusy(true);
+    }
+
     public void setPersonFreeById(Long personId) {
         Person person = getPersonById(personId).orElseThrow(
                 () -> new PersonNotFoundException("Person with id " + personId + " not found")

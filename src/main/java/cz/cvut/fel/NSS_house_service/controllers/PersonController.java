@@ -52,6 +52,11 @@ public class PersonController {
         return personService.createRandomPerson(roomId);
     }
 
+    @PutMapping("/{personId}/handlingEvent")
+    public void setPersonHandlingEvent(@PathVariable Long personId) {
+        personService.setPersonHandlingEvent(personId);
+    }
+
     @PutMapping("/{personId}/free")
     public void setPersonFree(@PathVariable Long personId) {
         personService.setPersonFreeById(personId);
