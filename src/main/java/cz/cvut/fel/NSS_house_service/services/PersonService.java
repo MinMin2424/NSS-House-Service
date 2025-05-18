@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import cz.cvut.fel.NSS_house_service.exceptions.PersonNotFoundException;
 @Service
 public class PersonService implements PersonServiceInterface {
 
+    @Getter
     private final List<Person> personList;
     private final AtomicLong idGenerator;
     private final PersonType[] roles;
@@ -36,9 +38,9 @@ public class PersonService implements PersonServiceInterface {
         random = new Random();
     }
 
-    public List<Person> getPersonList() {
+    /*public List<Person> getPersonList() {
         return personList;
-    }
+    }*/
 
     public Optional<Person> getPersonById(Long personId) {
         return personList.stream()
@@ -61,12 +63,12 @@ public class PersonService implements PersonServiceInterface {
     }
 
     public Person createRandomPerson(Long roomId) {
-        Person person = new Person();
-        PersonType role = roles[random.nextInt(roles.length)];
-        person.setRole(role);
-        person.setRoomId(roomId);
-        person.setBusy(false);
-        person.setPersonId(idGenerator.getAndIncrement());
+        Person person = Person.builder()
+                .role(roles[random.nextInt(roles.length)])
+                .roomId(roomId)
+                .isBusy(false)
+                .personId(idGenerator.getAndIncrement())
+                .build();
         personList.add(person);
         kafka.send("log.created", String.format("Creating random person with id: %d in room: %d", person.getPersonId(), roomId));
         return person;

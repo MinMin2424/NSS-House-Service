@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import cz.cvut.fel.NSS_house_service.entities.ApplianceType;
 @Service
 public class ApplianceService implements ApplianceServiceInterface {
 
+    @Getter
     private final List<Appliance> appliances;
     private final ApplianceType[] applianceTypes;
     private final AtomicLong idGenerator;
@@ -37,9 +39,9 @@ public class ApplianceService implements ApplianceServiceInterface {
         random = new Random();
     }
 
-    public List<Appliance> getAppliances() {
+    /*public List<Appliance> getAppliances() {
         return appliances;
-    }
+    }*/
 
     public Optional<Appliance> getApplianceById(Long applianceId) {
         return appliances.stream()
@@ -62,8 +64,6 @@ public class ApplianceService implements ApplianceServiceInterface {
     }
 
     public Appliance createRandomAppliance(Long roomId) {
-        Appliance appliance = new Appliance();
-
         ApplianceType randomApplianceType = applianceTypes[random.nextInt(applianceTypes.length)];
         String brand = "Brand-" + random.nextInt(1000);
         LocalDate productionDate = LocalDate.now()
@@ -71,11 +71,13 @@ public class ApplianceService implements ApplianceServiceInterface {
                 .minusMonths(random.nextInt(12));
         int state = random.nextInt(3);
 
-        appliance.setBrand(brand);
-        appliance.setApplianceType(randomApplianceType);
-        appliance.setProductionDate(productionDate);
-        appliance.setState(state);
-        appliance.setRoomId(Objects.requireNonNullElseGet(roomId, () -> random.nextLong(10) + 1));
+        Appliance appliance = Appliance.builder()
+                .brand(brand)
+                .applianceType(randomApplianceType)
+                .productionDate(productionDate)
+                .state(state)
+                .roomId(Objects.requireNonNullElseGet(roomId, () -> random.nextLong(10) + 1))
+                .build();
 
         appliance = createAppliance(appliance);
         kafka.send("log.created", String.format("Creating random appliance with id: %d for room: %d", appliance.getApplianceId(), roomId));

@@ -4,6 +4,13 @@
 
 package cz.cvut.fel.NSS_house_service.entities;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Builder
 public class Person {
 
     private Long personId;
@@ -11,36 +18,5 @@ public class Person {
     private boolean isBusy;
     private Long roomId;
 
-    public Long getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(Long personId) {
-        this.personId = personId;
-    }
-
-    public PersonType getRole() {
-        return role;
-    }
-
-    public void setRole(PersonType role) {
-        this.role = role;
-    }
-
-    public boolean isBusy() {
-        return isBusy;
-    }
-
-    public void setBusy(boolean busy) {
-        isBusy = busy;
-    }
-
-    public Long getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
-    }
 }
 
