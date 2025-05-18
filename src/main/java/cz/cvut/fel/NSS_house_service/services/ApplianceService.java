@@ -79,6 +79,6 @@ public class ApplianceService {
 
         appliance = createAppliance(appliance);
         kafka.send("log.created", String.format("Creating random appliance with id: %d for room: %d", appliance.getApplianceId(), roomId));
-        return createAppliance(appliance);
+        return appliance;
     }
 }

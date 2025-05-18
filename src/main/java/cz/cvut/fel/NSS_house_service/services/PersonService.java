@@ -68,7 +68,7 @@ public class PersonService {
         person.setBusy(false);
         person.setPersonId(idGenerator.getAndIncrement());
         personList.add(person);
-        kafka.send("log.created", String.format("Creating person with id: %d in room: %d", person.getPersonId(), roomId));
+        kafka.send("log.created", String.format("Creating random person with id: %d in room: %d", person.getPersonId(), roomId));
         return person;
     }
 
