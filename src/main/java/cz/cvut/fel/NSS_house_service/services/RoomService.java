@@ -1,11 +1,9 @@
-/*
- * Created by minmin_tranova on 16.05.2025
- */
-
 package cz.cvut.fel.NSS_house_service.services;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import cz.cvut.fel.NSS_house_service.entities.Room;
@@ -13,6 +11,10 @@ import cz.cvut.fel.NSS_house_service.entities.Room;
 @Service
 public class RoomService {
     private final ArrayList<Room> savedRooms;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafka;
+
     public RoomService() {
         savedRooms = new ArrayList<>();
     }
@@ -25,11 +27,12 @@ public class RoomService {
         Long newId = GetNextId();
         newRoom.setId(newId);
         savedRooms.add(newRoom);
+        kafka.send("log.created", String.format("Creating room with id: %d", newId));
         return newId;
     }
 
     public Room GetRoom(Long id){
-        return savedRooms.stream().filter(r -> r.getId() == id).findFirst().orElse(null);
+        return savedRooms.stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);
     }
 
     private Long GetNextId(){

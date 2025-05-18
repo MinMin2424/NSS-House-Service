@@ -1,12 +1,8 @@
 /*
- * Created by minmin_tranova on 16.05.2025
+ * Created by minmin_tranova on 09.05.2025
  */
 
 package cz.cvut.fel.NSS_house_service.services;
-
-import cz.cvut.fel.NSS_house_service.entities.Appliance;
-import cz.cvut.fel.NSS_house_service.entities.ApplianceType;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,6 +12,13 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import cz.cvut.fel.NSS_house_service.entities.Appliance;
+import cz.cvut.fel.NSS_house_service.entities.ApplianceType;
+
 @Service
 public class ApplianceService {
 
@@ -23,6 +26,9 @@ public class ApplianceService {
     private final ApplianceType[] applianceTypes;
     private final AtomicLong idGenerator;
     private final Random random;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafka;
 
     public ApplianceService() {
         appliances = new ArrayList<>();
@@ -51,6 +57,7 @@ public class ApplianceService {
         Long applianceId = idGenerator.getAndIncrement();
         appliance.setApplianceId(applianceId);
         appliances.add(appliance);
+        kafka.send("log.created", String.format("Creating appliance with id: %d in room: %d", applianceId, appliance.getRoomId()));
         return appliance;
     }
 
@@ -70,7 +77,8 @@ public class ApplianceService {
         appliance.setState(state);
         appliance.setRoomId(Objects.requireNonNullElseGet(roomId, () -> random.nextLong(10) + 1));
 
+        appliance = createAppliance(appliance);
+        kafka.send("log.created", String.format("Creating random appliance with id: %d for room: %d", appliance.getApplianceId(), roomId));
         return createAppliance(appliance);
     }
 }
-
