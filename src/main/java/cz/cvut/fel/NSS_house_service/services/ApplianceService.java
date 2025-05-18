@@ -20,7 +20,7 @@ import cz.cvut.fel.NSS_house_service.entities.Appliance;
 import cz.cvut.fel.NSS_house_service.entities.ApplianceType;
 
 @Service
-public class ApplianceService {
+public class ApplianceService implements ApplianceServiceInterface {
 
     private final List<Appliance> appliances;
     private final ApplianceType[] applianceTypes;

@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/appliances")
-public class ApplianceController {
+public class ApplianceController implements ApplianceControllerInterface {
 
     private final ApplianceService applianceService;
     public ApplianceController(ApplianceService applianceService) {

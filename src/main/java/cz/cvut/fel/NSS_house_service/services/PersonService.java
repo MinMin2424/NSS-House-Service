@@ -19,7 +19,7 @@ import cz.cvut.fel.NSS_house_service.entities.PersonType;
 import cz.cvut.fel.NSS_house_service.exceptions.PersonNotFoundException;
 
 @Service
-public class PersonService {
+public class PersonService implements PersonServiceInterface {
 
     private final List<Person> personList;
     private final AtomicLong idGenerator;

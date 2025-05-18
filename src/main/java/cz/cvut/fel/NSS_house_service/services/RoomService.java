@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import cz.cvut.fel.NSS_house_service.entities.Room;
 
 @Service
-public class RoomService {
+public class RoomService implements RoomServiceInterface {
     private final ArrayList<Room> savedRooms;
 
     @Autowired

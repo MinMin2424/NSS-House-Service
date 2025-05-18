@@ -20,7 +20,7 @@ import cz.cvut.fel.NSS_house_service.services.RoomService;
 
 @RestController
 @RequestMapping
-public class RoomController {
+public class RoomController implements RoomControllerInterface {
     private final RoomService roomService;
 
     @Autowired
